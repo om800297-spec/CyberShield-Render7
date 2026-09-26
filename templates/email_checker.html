@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head"><div class="section-tag">IDENTITY RISK SCANNER</div><h1>Email Scam Checker</h1><p>Enter an email address to check common suspicious patterns and receive an explainable risk score.</p></section>
+<section class="panel">
+  <div class="tab-row"><a class="tab" href="{{ url_for('mobile_checker') }}">📱 Mobile Number</a><a class="tab active" href="{{ url_for('email_checker') }}">📧 Email Address</a></div>
+  <form method="post" action="{{ url_for('email_checker') }}">
+    <label>Email address</label>
+    <input class="text-input" type="email" name="email" value="{{ value }}" required placeholder="example@gmail.com" autocomplete="off">
+    <button class="primary wide" type="submit">🔎 Scan Email Address</button>
+  </form>
+  {% if result %}{% include 'contact_result.html' %}{% endif %}
+</section>
+{% endblock %}

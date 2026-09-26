@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head">
+  <div class="section-tag">IDENTITY RISK SCANNER</div>
+  <h1>Mobile Number & Email Checker</h1>
+  <p>Check a phone number or email address for suspicious patterns and receive an explainable risk indicator.</p>
+</section>
+<section class="panel">
+  <div class="tab-row">
+    <button type="button" id="phoneTab" class="tab {% if kind!='email' %}active{% endif %}" onclick="showScanner('phone')">📱 Mobile Number</button>
+    <button type="button" id="emailTab" class="tab {% if kind=='email' %}active{% endif %}" onclick="showScanner('email')">📧 Email Address</button>
+  </div>
+
+  <div id="phoneScanner" {% if kind=='email' %}style="display:none"{% endif %}>
+    <form method="post" action="{{ url_for('contact_checker') }}">
+      <input type="hidden" name="kind" value="phone">
+      <label>Mobile number</label>
+      <input class="text-input" type="tel" name="value" value="{% if kind!='email' %}{{ value }}{% endif %}" required placeholder="+91 9876543210" autocomplete="off">
+      <button class="primary wide" type="submit">🔎 Scan Mobile Number</button>
+    </form>
+  </div>
+
+  <div id="emailScanner" {% if kind!='email' %}style="display:none"{% endif %}>
+    <form method="post" action="{{ url_for('contact_checker') }}">
+      <input type="hidden" name="kind" value="email">
+      <label>Email address</label>
+      <input class="text-input" type="email" name="value" value="{% if kind=='email' %}{{ value }}{% endif %}" required placeholder="example@gmail.com" autocomplete="off">
+      <button class="primary wide" type="submit">🔎 Scan Email Address</button>
+    </form>
+  </div>
+
+  {% if result %}
+  <div class="premium-result result">
+    <div class="risk-card"><div class="risk-label">RISK SCORE</div><div class="risk-number">{{ result.score }}</div><div class="risk-outof">out of 100</div><div class="risk-badge">{{ result.level }}</div><div class="category">{{ result.category }}</div></div>
+    <div class="result-copy"><div class="section-tag">EXPLAINABLE RESULT</div><h2>Risk indicators found</h2><div class="reason-grid">{% for r in result.reasons %}<div class="reason">⚠️ <span>{{ r }}</span></div>{% endfor %}</div><div class="recommendation"><b>🛡️ Safety action</b><p>{{ result.recommendation }}</p></div></div>
+  </div>
+  {% endif %}
+</section>
+<script>
+function showScanner(kind){
+  const phone=document.getElementById('phoneScanner');
+  const email=document.getElementById('emailScanner');
+  const phoneTab=document.getElementById('phoneTab');
+  const emailTab=document.getElementById('emailTab');
+  const pInput=phone.querySelector('input[type="tel"]');
+  const eInput=email.querySelector('input[type="email"]');
+  if(kind==='email'){
+    phone.style.display='none'; email.style.display='block';
+    phoneTab.classList.remove('active'); emailTab.classList.add('active');
+    pInput.required=false; eInput.required=true; eInput.focus();
+  }else{
+    email.style.display='none'; phone.style.display='block';
+    emailTab.classList.remove('active'); phoneTab.classList.add('active');
+    eInput.required=false; pInput.required=true; pInput.focus();
+  }
+}
+</script>
+{% endblock %}

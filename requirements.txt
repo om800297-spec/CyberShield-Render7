@@ -1,0 +1,6 @@
+Flask>=3.0
+scikit-learn>=1.4
+Pillow>=10.0
+pytesseract>=0.3.10
+rapidocr_onnxruntime>=1.4.4
+gunicorn>=21.2
