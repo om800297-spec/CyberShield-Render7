@@ -112,6 +112,7 @@ def screenshot():
                 else:
                     flash("Screenshot uploaded, but no readable text was detected. Try a clearer screenshot.")
             except Exception as exc:
+                app.logger.exception("SCREENSHOT OCR ERROR")
                 flash("Screenshot OCR could not process this image. Try a clearer screenshot.")
     return render_template("screenshot.html",result=result,extracted=extracted)
 
